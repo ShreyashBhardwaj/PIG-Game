@@ -26,11 +26,13 @@ const holdBtn = document.querySelector(".btn--hold");
 
 // Player 1
 const player1 = document.querySelector(".player--0"); // Section
+const player1Name = document.getElementById("name--0");
 let player1Score = document.getElementById("score--0"); // Score to be saved when Hold Button is pressed
 let player1CurrentScore = document.getElementById("current--0"); // Score when Dice Roll Button is pressed
 
 // Player 2
 const player2 = document.querySelector(".player--1"); // Section
+const player2Name = document.getElementById("name--1");
 let player2Score = document.getElementById("score--1"); // Score to be saved when Hold Button is pressed
 let player2CurrentScore = document.getElementById("current--1"); // Score when Dice Roll Button is pressed
 
@@ -53,10 +55,12 @@ const restart = function () {
   player1CurrentScore.innerHTML = 0;
   player2Score.innerHTML = 0;
   player2CurrentScore.innerHTML = 0;
+  player1.classList.add("player--active");
+  player2.classList.remove("player--active");
   console.log("NewGame Code Ends");
 };
 
-const play = function (playerTurn) {
+const play = function () {
   console.log("Play Function Added");
   let currentDiceRoll = diceRoll();
 
@@ -75,18 +79,24 @@ const play = function (playerTurn) {
   }
 };
 
-const hold = function (playerTurn) {
+const hold = function () {
   if (!playerTurn) {
-    holdLogic(player1Score, player1CurrentScore);
+    holdLogic(player1Name, player1Score, player1CurrentScore);
   } else {
-    holdLogic(player2Score, player2CurrentScore);
+    holdLogic(player2Name, player2Score, player2CurrentScore);
   }
 };
 
-const holdLogic = function (score, currentScore) {
+const holdLogic = function (name, score, currentScore) {
   score.innerHTML = Number(score.innerHTML) + Number(currentScore.innerHTML);
   currentScore.innerHTML = 0;
   playerTurn = !playerTurn;
+  if (Number(score.innerHTML) >= 100) {
+    alert(`${name.innerHTML} WINS`);
+    name.innerHTML = "You Win";
+    diceRollBtn.removeEventListener("click", play);
+    holdBtn.removeEventListener("click", hold);
+  }
 };
 
 const gameLogic = function (diceRoll, player) {
@@ -100,5 +110,5 @@ const gameLogic = function (diceRoll, player) {
 restart();
 
 newGame.addEventListener("click", restart);
-diceRollBtn.addEventListener("click", () => play(playerTurn));
-holdBtn.addEventListener("click", () => hold(playerTurn));
+diceRollBtn.addEventListener("click", play);
+holdBtn.addEventListener("click", hold);
