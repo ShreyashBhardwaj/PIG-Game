@@ -66,17 +66,16 @@ const play = function () {
 
   if (!playerTurn) {
     console.log("Player 1");
-    if (!player1.classList.contains("player--active")) {
-      player2.classList.remove("player--active");
-      player1.classList.add("player--active");
-    }
     gameLogic(currentDiceRoll, player1CurrentScore);
   } else {
     console.log("Player 2");
-    player1.classList.remove("player--active");
-    player2.classList.add("player--active");
     gameLogic(currentDiceRoll, player2CurrentScore);
   }
+};
+
+const changeState = function () {
+  player1.classList.toggle("player--active");
+  player2.classList.toggle("player--active");
 };
 
 const hold = function () {
@@ -90,7 +89,9 @@ const hold = function () {
 const holdLogic = function (name, score, currentScore) {
   score.innerHTML = Number(score.innerHTML) + Number(currentScore.innerHTML);
   currentScore.innerHTML = 0;
+  changeState();
   playerTurn = !playerTurn;
+
   if (Number(score.innerHTML) >= 100) {
     alert(`${name.innerHTML} WINS`);
     name.innerHTML = "You Win";
@@ -103,6 +104,7 @@ const gameLogic = function (diceRoll, player) {
   if (diceRoll === 1) {
     player.innerHTML = 0;
     playerTurn = !playerTurn;
+    changeState();
   } else {
     player.innerHTML = Number(player.innerHTML) + diceRoll;
   }
